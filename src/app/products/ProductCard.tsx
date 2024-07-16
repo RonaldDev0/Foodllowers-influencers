@@ -19,7 +19,13 @@ export function ProductCard ({ product }: { product: any }) {
             {product.name}
           </p>
           <p>
-            {earning.toLocaleString('es-Es', { style: 'currency', currency: 'COP' })}
+            {earning.toLocaleString('es-Es', {
+              style: 'currency',
+              currency: 'COP',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+              useGrouping: true
+            })}
           </p>
         </div>
       </CardBody>

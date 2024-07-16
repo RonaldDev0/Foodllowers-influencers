@@ -18,7 +18,14 @@ export function HistoryCard ({ item }: { item: Item }) {
           <div className='flex justify-between items-center'>
             <p>{new Date(item.created_at).toLocaleDateString('es-ES')}</p>
             <div className='flex gap-4'>
-              <p>{item.amount.toLocaleString('es-Es', { style: 'currency', currency: 'COP' })}</p>
+              <p>{item.amount.toLocaleString('es-Es', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+                useGrouping: true
+              })}
+              </p>
               <ArrowRight size={28} className='opacity-0 group-hover:opacity-100 transition-all' />
             </div>
           </div>
@@ -33,7 +40,14 @@ export function HistoryCard ({ item }: { item: Item }) {
               </ModalHeader>
               <ModalBody>
                 <p>{new Date(item.created_at).toLocaleDateString('es-ES')}</p>
-                <p>{item.amount.toLocaleString('es-Es', { style: 'currency', currency: 'COP' })}</p>
+                <p>{item.amount.toLocaleString('es-Es', {
+                  style: 'currency',
+                  currency: 'COP',
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                  useGrouping: true
+                })}
+                </p>
               </ModalBody>
               <ModalFooter>
                 <Button color='secondary' onPress={onClose}>
