@@ -14,7 +14,7 @@ export function History () {
     }
 
     supabase
-      .from('transactions')
+      .from('earnings')
       .select('*')
       .eq('influencer_id', influencer.id)
       .order('created_at', { ascending: false })
