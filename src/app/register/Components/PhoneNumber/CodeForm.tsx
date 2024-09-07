@@ -31,8 +31,6 @@ export function CodeForm ({ setStep, code, onClose, number }: IProps) {
       return
     }
 
-    console.log(influencer)
-
     supabase
       .from('influencers')
       .update({ phone_number: number })
