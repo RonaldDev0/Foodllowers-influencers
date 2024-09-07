@@ -26,13 +26,27 @@ const Context = createContext<SupabaseContext | undefined>(undefined)
 export function Providers ({ children }: { children: ReactNode }) {
   const [supabase] = useState(() => createPagesBrowserClient())
   const router = useRouter()
-  const { setStore } = useData()
+  const { influencer, setStore } = useData()
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => router.refresh())
 
     return () => subscription.unsubscribe()
   }, [router, supabase])
+
+  useEffect(() => {
+    if (!influencer) return
+    if (!influencer.register_complete) {
+      switch (influencer.register_step) {
+        case 'data_collection':
+          router.push('/register')
+          break
+        case 'data_validation':
+          router.push('/validation')
+          break
+      }
+    }
+  }, [influencer])
 
   useEffect(() => {
     supabase.auth.getSession()
@@ -45,11 +59,19 @@ export function Providers ({ children }: { children: ReactNode }) {
             .eq('user_id', session.user.id)
             .single()
             .then(({ data }) => {
+              if (!data) {
+                supabase
+                  .from('influencers')
+                  .insert([{ user_id: session.user.id, email: session.user.email }])
+                  .select('*')
+                  .then(({ data, error }) => {
+                    if (error) return
+                    setStore('influencer', data[0])
+                  })
+              }
               if (data) {
                 setStore('influencer', data)
-                return
               }
-              router.push('/error')
             })
         }
       })
