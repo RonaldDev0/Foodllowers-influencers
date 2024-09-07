@@ -21,14 +21,27 @@ export function Name ({ onClose }: { onClose: any }) {
 
     supabase
       .from('influencers')
-      .update({ full_name: input })
-      .eq('id', influencer.id)
-      .select('*')
-      .single()
-      .then(({ error, data }) => {
+      .select('full_name')
+      .neq('id', influencer.id)
+      .eq('full_name', input)
+      .then(({ data, error }) => {
         if (error) return
-        setStore('influencer', data[0])
-        onClose()
+
+        if (data.length > 0) {
+          setError('Ya existe un influencer registrado con ese nombre')
+          return
+        }
+
+        supabase
+          .from('influencers')
+          .update({ full_name: input })
+          .eq('id', influencer.id)
+          .select('*')
+          .then(({ error, data }) => {
+            if (error) return
+            setStore('influencer', data[0])
+            onClose()
+          })
       })
   }
 

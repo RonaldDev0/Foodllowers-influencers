@@ -31,6 +31,8 @@ export function CodeForm ({ setStep, code, onClose, number }: IProps) {
       return
     }
 
+    console.log(influencer)
+
     supabase
       .from('influencers')
       .update({ phone_number: number })
@@ -38,8 +40,9 @@ export function CodeForm ({ setStep, code, onClose, number }: IProps) {
       .select('*')
       .then(({ error, data }) => {
         if (error) {
-          if (error.message === 'duplicate key value violates unique constraint "deliverys_phone_number_key"') {
-            setError('Ya existe un repartidor con ese número')
+          console.log(error)
+          if (error.message === 'duplicate key value violates unique constraint "influencers_phone_number_key"') {
+            setError('Ya existe un influencer registrado con ese número')
             return
           }
           return
