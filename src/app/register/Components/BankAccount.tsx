@@ -3,74 +3,28 @@ import { useState } from 'react'
 import { Select, SelectItem, Input, Button } from '@nextui-org/react'
 import { useData } from '@/store'
 import { useSupabase } from '@/app/providers'
-
-const banks = [
-  {
-    name: 'Bancolombia',
-    value: 'Bancolombia'
-  },
-  {
-    name: 'Banco Caja Social',
-    value: 'Banco Caja Social'
-  },
-  {
-    name: 'Banco Davivienda',
-    value: 'Banco Davivienda'
-  },
-  {
-    name: 'Banco de Bogotá',
-    value: 'Banco de Bogotá'
-  },
-  {
-    name: 'Banco de la República',
-    value: 'Banco de la República'
-  },
-  {
-    name: 'Banco de Occidente',
-    value: 'Banco de Occidente'
-  },
-  {
-    name: 'BBVA Colombia',
-    value: 'BBVA Colombia'
-  },
-  {
-    name: 'Banco Pichincha',
-    value: 'Banco Pichincha'
-  },
-  {
-    name: 'Banco Santander Colombia',
-    value: 'Banco Santander Colombia'
-  },
-  {
-    name: 'Financiera Comultrasan',
-    value: 'Financiera Comultrasan'
-  },
-  {
-    name: 'Itaú Corpbanca Colombia',
-    value: 'Itaú Corpbanca Colombia'
-  }
-]
+import { banks } from './banks'
 
 export function BankAccount ({ onClose }: { onClose: any }) {
-  const { kitchenId, kitchen, setStore } = useData()
+  const { influencer, setStore } = useData()
   const { supabase } = useSupabase()
 
-  const [accountType, setAccountType] = useState<any>(kitchen ? kitchen?.bank_account?.accountType : '')
+  const [accountType, setAccountType] = useState<any>(influencer ? influencer?.bank_account?.accountType : '')
   const [accountTypeError, setAccountTypeError] = useState<any>(null)
 
-  const [bank, setBank] = useState<any>(kitchen ? kitchen?.bank_account?.bank : null)
+  const [bank, setBank] = useState<any>(influencer ? influencer?.bank_account?.bank : null)
   const [bankError, setBankError] = useState<any>(null)
 
-  const [bankNumber, setBankNumber] = useState<string>(kitchen ? kitchen?.bank_account?.bankNumber : '')
+  const [bankNumber, setBankNumber] = useState<string>(influencer ? influencer?.bank_account?.bankNumber : '')
   const [bankNumberError, setBankNumberError] = useState<any>(null)
 
-  const [ownerName, setOwnerName] = useState<string>(kitchen ? kitchen?.bank_account?.ownerName : '')
+  const [ownerName, setOwnerName] = useState<string>(influencer ? influencer?.bank_account?.ownerName : '')
   const [ownerNameError, setOwnerNameError] = useState<any>(null)
 
-  const [ownerDocumentType, setOwnerDocumentType] = useState<any>(kitchen ? kitchen?.bank_account?.ownerDocumentType : '')
+  const [ownerDocumentType, setOwnerDocumentType] = useState<any>(influencer ? influencer?.bank_account?.ownerDocumentType : '')
   const [ownerDocumentTypeError, setOwnerDocumentTypeError] = useState<any>(null)
 
-  const [ownerDocumentNumber, setOwnerDocumentNumber] = useState<string>(kitchen ? kitchen?.bank_account?.ownerDocumentNumber : '')
+  const [ownerDocumentNumber, setOwnerDocumentNumber] = useState<string>(influencer ? influencer?.bank_account?.ownerDocumentNumber : '')
   const [ownerDocumentNumberError, setOwnerDocumentNumberError] = useState<any>(null)
 
   const handleSubmit = (e: any) => {
@@ -96,13 +50,13 @@ export function BankAccount ({ onClose }: { onClose: any }) {
     }
 
     supabase
-      .from('kitchens')
+      .from('influencers')
       .update({ bank_account: { accountType, bank, bankNumber, ownerName, ownerDocumentType, ownerDocumentNumber } })
-      .eq('id', kitchenId)
+      .eq('id', influencer.id)
       .select('*')
       .then(({ error, data }) => {
         if (error) return
-        setStore('kitchen', data[0])
+        setStore('influencer', data[0])
         onClose()
       })
 
@@ -185,11 +139,17 @@ export function BankAccount ({ onClose }: { onClose: any }) {
           errorMessage={ownerDocumentTypeError && ownerDocumentTypeError}
           isInvalid={!!ownerDocumentTypeError}
         >
-          <SelectItem value='value' key='key'>
+          <SelectItem value='1' key='1'>
             Cédula de ciudadanía
           </SelectItem>
           <SelectItem value='2' key='2'>
             Cédula de extranjería
+          </SelectItem>
+          <SelectItem value='3' key='3'>
+            NIT
+          </SelectItem>
+          <SelectItem value='6' key='6'>
+            Pasaporte
           </SelectItem>
         </Select>
         <Input

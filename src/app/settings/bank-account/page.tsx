@@ -4,6 +4,7 @@ import { useState, useEffect, FC } from 'react'
 import { Card, CardHeader, CardBody, Select, SelectItem, Input, Button } from '@nextui-org/react'
 import { Landmark } from 'lucide-react'
 import { useData } from '@/store'
+import { banks } from './banks'
 
 interface ToastProps {
   message: string
@@ -27,53 +28,6 @@ const Toast: FC<ToastProps> = ({ message, isVisible, onClose }) => {
     </div>
   )
 }
-
-const banks = [
-  {
-    name: 'Bancolombia',
-    value: 'Bancolombia'
-  },
-  {
-    name: 'Banco Caja Social',
-    value: 'Banco Caja Social'
-  },
-  {
-    name: 'Banco Davivienda',
-    value: 'Banco Davivienda'
-  },
-  {
-    name: 'Banco de Bogotá',
-    value: 'Banco de Bogotá'
-  },
-  {
-    name: 'Banco de la República',
-    value: 'Banco de la República'
-  },
-  {
-    name: 'Banco de Occidente',
-    value: 'Banco de Occidente'
-  },
-  {
-    name: 'BBVA Colombia',
-    value: 'BBVA Colombia'
-  },
-  {
-    name: 'Banco Pichincha',
-    value: 'Banco Pichincha'
-  },
-  {
-    name: 'Banco Santander Colombia',
-    value: 'Banco Santander Colombia'
-  },
-  {
-    name: 'Financiera Comultrasan',
-    value: 'Financiera Comultrasan'
-  },
-  {
-    name: 'Itaú Corpbanca Colombia',
-    value: 'Itaú Corpbanca Colombia'
-  }
-]
 
 export default function BankAccount () {
   const { influencer, setStore } = useData()

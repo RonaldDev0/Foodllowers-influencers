@@ -5,10 +5,10 @@ import { CodeForm } from './CodeForm'
 import { useData } from '@/store'
 
 export function PhoneNumber ({ onClose }: { onClose: any }) {
-  const { kitchen } = useData()
+  const { influencer } = useData()
 
   const [step, setStep] = useState<number>(0)
-  const [number, setNumber] = useState(kitchen ? kitchen.phone_number as any : '')
+  const [number, setNumber] = useState(influencer ? influencer.phone_number as any : '')
   const [code, setCode] = useState<any>(null)
 
   function createCode () {

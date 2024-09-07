@@ -13,7 +13,7 @@ interface IProps {
 
 export function CodeForm ({ setStep, code, onClose, number }: IProps) {
   const { supabase } = useSupabase()
-  const { kitchenId, setStore } = useData()
+  const { influencer, setStore } = useData()
 
   const [input, setInput] = useState('')
   const [error, setError] = useState<any>(null)
@@ -32,9 +32,9 @@ export function CodeForm ({ setStep, code, onClose, number }: IProps) {
     }
 
     supabase
-      .from('kitchens')
+      .from('influencers')
       .update({ phone_number: number })
-      .eq('id', kitchenId)
+      .eq('id', influencer.id)
       .select('*')
       .then(({ error, data }) => {
         if (error) {
@@ -45,7 +45,7 @@ export function CodeForm ({ setStep, code, onClose, number }: IProps) {
           return
         }
 
-        setStore('kitchen', data[0])
+        setStore('influencer', data[0])
         onClose && onClose()
       })
   }

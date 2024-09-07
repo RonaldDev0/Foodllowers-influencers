@@ -7,28 +7,40 @@ import { ChevronRight, Check } from 'lucide-react'
 import type { IStep } from './registerSteps'
 
 export function CardItem ({ icon, title, component, tableReference }: IStep) {
-  const { kitchen } = useData()
+  const { influencer } = useData()
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const [checked, setChecked] = useState(false)
 
   useEffect(() => {
-    if (!kitchen) return
+    if (!influencer) return
 
     if (tableReference === 'bank_account') {
       setChecked((
-        !!kitchen?.bank_account?.accountType &&
-        !!kitchen?.bank_account?.bank &&
-        !!kitchen?.bank_account?.bankNumber &&
-        !!kitchen?.bank_account?.ownerName &&
-        !!kitchen?.bank_account?.ownerDocumentType &&
-        !!kitchen?.bank_account?.ownerDocumentNumber
+        !!influencer?.bank_account?.accountType &&
+        !!influencer?.bank_account?.bank &&
+        !!influencer?.bank_account?.bankNumber &&
+        !!influencer?.bank_account?.ownerName &&
+        !!influencer?.bank_account?.ownerDocumentType &&
+        !!influencer?.bank_account?.ownerDocumentNumber
       ))
       return
     }
 
-    setChecked(kitchen[tableReference])
-  }, [kitchen])
+    if (tableReference === 'social_networks') {
+      setChecked((
+        !!influencer?.social_networks?.twitter ||
+        !!influencer?.social_networks?.instagram ||
+        !!influencer?.social_networks?.facebook ||
+        !!influencer?.social_networks?.twitch ||
+        !!influencer?.social_networks?.youtube ||
+        !!influencer?.social_networks?.tiktok
+      ))
+      return
+    }
+
+    setChecked(influencer[tableReference])
+  }, [influencer])
 
   return (
     <>

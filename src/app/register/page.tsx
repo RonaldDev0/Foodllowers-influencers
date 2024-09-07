@@ -15,9 +15,7 @@ interface ToastProps {
 }
 
 const Toast: FC<ToastProps> = ({ message, isVisible, onClose }) => {
-  if (!isVisible) {
-    return null
-  }
+  if (!isVisible) return null
 
   return (
     <div className='fixed bottom-9 right-0 m-6 animate-bounce '>
@@ -31,26 +29,29 @@ const Toast: FC<ToastProps> = ({ message, isVisible, onClose }) => {
   )
 }
 
-function validateForm (kitchen: any, termsAndConditions: boolean) {
-  if (!kitchen.phone_number) {
+function validateForm (influencer: any, termsAndConditions: boolean) {
+  const { twitter, instagram, facebook, twitch, youtube, tiktok } = influencer.social_networks
+  const { accountType, bank, bankNumber, ownerName, ownerDocumentType, ownerDocumentNumber } = influencer.bank_account
+
+  if (!influencer.full_name) {
+    return { success: false, error: 'Ingresa tu nombre antes de continuar' }
+  } else if (!influencer.phone_number) {
     return { success: false, error: 'Ingresa tu número de celular antes de continuar' }
-  } else if (!kitchen.chamber_of_commerce) {
-    return { success: false, error: 'Ingresa el certificado de Cámara de Comercio antes de continuar' }
-  } else if (!kitchen.health) {
-    return { success: false, error: 'Ingresa el certificado de Sanidad antes de continuar' }
-  } else if (!kitchen.bank_account) {
+  } else if (!twitter && !instagram && !facebook && !twitch && !youtube && !tiktok) {
+    return { success: false, error: 'Ingresa la URL de tus redes sociales antes de continuar' }
+  } else if (!influencer.bank_account) {
     return { success: false, error: 'Ingresa los datos de tu cuenta bancaria antes de continuar' }
-  } else if (!kitchen.bank_account.accountType) {
+  } else if (!accountType) {
     return { success: false, error: 'Selecciona tu tipo de cuenta bancaria antes de continuar' }
-  } else if (!kitchen.bank_account.bank) {
+  } else if (!bank) {
     return { success: false, error: 'Selecciona tu entidad bancaria antes de continuar' }
-  } else if (!kitchen.bank_account.bankNumber) {
+  } else if (!bankNumber) {
     return { success: false, error: 'Ingresa tu número de cuenta bancaria antes de continuar' }
-  } else if (!kitchen.bank_account.ownerName) {
+  } else if (!ownerName) {
     return { success: false, error: 'Ingresa el nombre del propietario de la cuenta bancaria antes de continuar' }
-  } else if (!kitchen.bank_account.ownerDocumentType) {
+  } else if (!ownerDocumentType) {
     return { success: false, error: 'Selecciona tu tipo de documento antes de continuar' }
-  } else if (!kitchen.bank_account.ownerDocumentNumber) {
+  } else if (!ownerDocumentNumber) {
     return { success: false, error: 'Ingresa tu número de documento antes de continuar' }
   } else if (!termsAndConditions) {
     return { success: false, error: 'Debes aceptar los terminos y condiciones antes de continuar' }
@@ -61,7 +62,7 @@ function validateForm (kitchen: any, termsAndConditions: boolean) {
 
 export default function Register () {
   const router = useRouter()
-  const { kitchenId, kitchen, setStore } = useData()
+  const { influencer, setStore } = useData()
   const { supabase } = useSupabase()
 
   const [termsAndConditions, setTermsAndConditions] = useState(false)
@@ -75,7 +76,7 @@ export default function Register () {
   }
 
   const handleSubmit = () => {
-    const { error } = validateForm(kitchen, termsAndConditions)
+    const { error } = validateForm(influencer, termsAndConditions)
 
     if (error) {
       showToast(error)
@@ -83,15 +84,13 @@ export default function Register () {
     }
 
     supabase
-      .from('kitchens')
+      .from('influencers')
       .update({ register_step: 'data_validation' })
-      .eq('id', kitchenId)
+      .eq('id', influencer.id)
       .select('*')
       .then(({ data, error }) => {
-        if (error) {
-          return
-        }
-        setStore('kitchen', data[0])
+        if (error) return
+        setStore('influencer', data[0])
       })
   }
 
@@ -101,13 +100,12 @@ export default function Register () {
   }
 
   useEffect(() => {
-    if (!kitchen) {
-      return
-    }
-    if (kitchen.register_complete) {
+    if (!influencer) return
+
+    if (influencer.register_step === 'finished') {
       router.push('/')
     }
-  }, [kitchen])
+  }, [influencer])
 
   return (
     <main className='fixed z-50 w-full h-screen top-0 left-0 flex flex-col justify-center gap-20 items-center backdrop-blur-md'>

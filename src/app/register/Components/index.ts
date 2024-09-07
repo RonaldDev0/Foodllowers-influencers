@@ -1,3 +1,3 @@
-export * from './ChamberOfCommerce'
-export * from './Health'
 export * from './BankAccount'
+export * from './SocialNetworks'
+export * from './Name'
