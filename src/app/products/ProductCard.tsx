@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Card, CardBody } from '@nextui-org/react'
 
-const earning = 2000
+const earning = 1000
 
 export function ProductCard ({ product }: { product: any }) {
   return (
