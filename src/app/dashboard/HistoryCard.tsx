@@ -11,7 +11,11 @@ export interface Item {
 export function HistoryCard ({ item }: { item: Item }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const date = new Date(item.created_at)
-    .toLocaleDateString('es-ES')
+    .toLocaleDateString('es-ES', {
+      month: 'long',
+      year: 'numeric',
+      day: 'numeric'
+    })
 
   const amount = item.amount
     .toLocaleString('es-Es', {
