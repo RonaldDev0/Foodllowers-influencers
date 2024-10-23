@@ -39,7 +39,7 @@ export function Providers ({ children }: { children: ReactNode }) {
     if (!influencer.register_complete) {
       switch (influencer.register_step) {
         case 'data_collection':
-          router.push('/register')
+          // router.push('/register')
           break
         case 'data_validation':
           router.push('/validation')
