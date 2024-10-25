@@ -17,7 +17,7 @@ export function Route () {
       )}
       <Breadcrumbs>
         {breadcrumbs.map(item => (
-          <BreadcrumbItem key={item}>{item}</BreadcrumbItem>
+          <BreadcrumbItem key={item}>{item === 'settings' ? 'Configuracíones' : 'cuenta de banco'}</BreadcrumbItem>
         ))}
       </Breadcrumbs>
     </div>
