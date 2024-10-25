@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useData } from '@/store'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, Card, CardHeader } from '@nextui-org/react'
-import { Home, User, History, LogOut, ChefHat, Settings, BarChart2 } from 'lucide-react'
+import { Home, User, History, LogOut, ChefHat, Settings } from 'lucide-react'
 import { useSupabase } from '../app/providers'
 
 export function NavBarr () {
@@ -31,9 +31,9 @@ export function NavBarr () {
           <Link href='/dashboard'>
             <History size={28} />
           </Link>
-          <Link href='/charts'>
+          {/* <Link href='/charts'>
             <BarChart2 size={28} />
-          </Link>
+          </Link> */}
           <Dropdown>
             <DropdownTrigger>
               <Avatar size='md' className='cursor-pointer' src={user.user_metadata.avatar_url} />
@@ -43,7 +43,7 @@ export function NavBarr () {
                 <Link href='/settings'>
                   <div className='flex gap-3'>
                     <Settings />
-                    <p>Settings</p>
+                    <p>Configuraciones</p>
                   </div>
                 </Link>
               </DropdownItem>
@@ -51,14 +51,14 @@ export function NavBarr () {
                 <Link href='/profile'>
                   <div className='flex gap-3'>
                     <User />
-                    <p>Profile</p>
+                    <p>Perfil</p>
                   </div>
                 </Link>
               </DropdownItem>
               <DropdownItem onPress={logout} className='text-danger' color='danger'>
                 <div className='flex gap-3'>
                   <LogOut />
-                  <p>Logout</p>
+                  <p>Cerrar sesión</p>
                 </div>
               </DropdownItem>
             </DropdownMenu>

@@ -1,40 +1,57 @@
 'use client'
-import { faker } from '@faker-js/faker'
 import { useColors } from '../colors'
 import type { IMode } from './index'
+import { labelSets, supabaseData, getDateDetails, groupEarningsByCategory } from '../blackBox'
 
-const labelSets = {
-  año: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-  mes: ['semana 1', 'semana 2', 'semana 3', 'semana 4'],
-  semana: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-  personalizado: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-}
-
-const generateData = (labels: string[], min: number, max: number) =>
-  labels.map(() => faker.number.int({ min, max }) * 2500)
-
-export function useData (mode: IMode) {
+export function useData (mode: IMode, color: number) {
   const { backgroundColor, borderColor } = useColors()
 
-  const { labels, min, max } = (() => {
-    switch (mode.category) {
-      case 'mes': return { labels: labelSets.mes, min: 25, max: 250 }
-      case 'semana': return { labels: labelSets.semana, min: 5, max: 50 }
-      default: return { labels: labelSets.año, min: 100, max: 1000 }
-    }
-  })()
+  function generateData () {
+    const data = supabaseData.map((item: any) => ({
+      earning: item.transaction_amount.influencer,
+      date: getDateDetails(item.created_at)
+    }))
 
-  const data = generateData(labels, min, max)
+    switch (mode.category) {
+      case 'año':
+        return {
+          labels: labelSets.año,
+          data: groupEarningsByCategory(data, mode)
+        }
+      case 'mes':
+        return {
+          labels: labelSets.mes,
+          data: groupEarningsByCategory(data, mode)
+        }
+      case 'semana':
+        return {
+          labels: labelSets.semana,
+          data: groupEarningsByCategory(data, mode)
+        }
+      case 'personalizado':
+        return {
+          labels: labelSets.personalizado,
+          data: groupEarningsByCategory(data, mode)
+        }
+      default:
+        return {
+          labels: labelSets.año,
+          data: groupEarningsByCategory(data, mode)
+        }
+    }
+  }
+
+  const { data, labels }: any = generateData()
 
   return {
     labels,
     datasets: [
       {
         label: 'Ganancias',
-        data,
-        backgroundColor: backgroundColor[1],
-        borderColor: borderColor[1],
-        borderWidth: 2
+        backgroundColor: backgroundColor[color],
+        borderColor: borderColor[color],
+        borderWidth: 2,
+        data
       }
     ]
   }

@@ -39,7 +39,7 @@ export default function Profile () {
             variant='flat'
           >
             <LogOut />
-            Logout
+            Cerrar sesión
           </Button>
         </CardBody>
       </Card>
