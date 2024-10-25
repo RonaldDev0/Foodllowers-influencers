@@ -8,19 +8,25 @@ type IProps = {
 }
 
 type ISelectProps = {
-  items: string[],
-  className?: string,
+  items: string[]
+  className?: string
   defaultKey: string
+  onChangeTarget: string
+  setMode: Function
 }
 
 const options = {
-  años: ['2022', '2023', '2024'],
+  años: Array.from({ length: new Date().getFullYear() - 2024 + 1 }, (_, i) => (2024 + i).toString()),
   meses: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
   semanas: ['1', '2', '3', '4']
 }
 
-const ModeSelect = ({ items, className, defaultKey }: ISelectProps) => (
-  <Select className={className} defaultSelectedKeys={[defaultKey]}>
+const ModeSelect = ({ items, className, defaultKey, onChangeTarget, setMode }: ISelectProps) => (
+  <Select
+    className={className}
+    defaultSelectedKeys={[defaultKey]}
+    onChange={({ target: { value } }) => setMode((prev: IMode) => ({ ...prev, [onChangeTarget]: value as string }))}
+  >
     {items.map(item => (
       <SelectItem key={item} value={item}>
         {item}
@@ -36,10 +42,10 @@ export function Header ({ mode, setMode }: IProps) {
         <p>Seleccionar por</p>
         <Select
           className='w-36'
-          defaultSelectedKeys={['mes']}
+          defaultSelectedKeys={['año']}
           onChange={({ target: { value } }) => setMode((prev: IMode) => ({ ...prev, category: value as string }))}
         >
-          {['año', 'mes', 'semana', 'personalizado'].map(item => (
+          {['año', 'mes', 'semana'].map(item => (
             <SelectItem key={item} value={item}>
               {item}
             </SelectItem>
@@ -52,6 +58,8 @@ export function Header ({ mode, setMode }: IProps) {
           items={options.años}
           className='w-24'
           defaultKey='2024'
+          onChangeTarget='year'
+          setMode={setMode}
         />
       )}
 
@@ -60,13 +68,17 @@ export function Header ({ mode, setMode }: IProps) {
           <ModeSelect
             items={options.meses}
             className='w-36'
-            defaultKey='octubre'
+            defaultKey={mode.month}
+            onChangeTarget='month'
+            setMode={setMode}
           />
           <p>de</p>
           <ModeSelect
             items={options.años}
             className='w-24'
             defaultKey='2024'
+            onChangeTarget='year'
+            setMode={setMode}
           />
         </div>
       )}
@@ -76,19 +88,25 @@ export function Header ({ mode, setMode }: IProps) {
           <ModeSelect
             items={options.semanas}
             className='w-16'
-            defaultKey='1'
+            defaultKey={mode.weekOfMonth}
+            onChangeTarget='weekOfMonth'
+            setMode={setMode}
           />
           <p>de</p>
           <ModeSelect
             items={options.meses}
             className='w-36'
-            defaultKey='octubre'
+            defaultKey={mode.month}
+            onChangeTarget='month'
+            setMode={setMode}
           />
           <p>de</p>
           <ModeSelect
             items={options.años}
             className='w-24'
             defaultKey='2024'
+            onChangeTarget='year'
+            setMode={setMode}
           />
         </div>
       )}
