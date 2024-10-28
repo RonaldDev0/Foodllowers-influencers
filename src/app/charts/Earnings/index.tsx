@@ -1,13 +1,11 @@
 'use client'
-
 import { Bar } from 'react-chartjs-2'
 import { Chart, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardBody, CardFooter, CardHeader, Select, SelectItem } from '@nextui-org/react'
-import { useData } from './data'
-import { useOptions } from './options'
 import { Header } from './Header'
-import { useColors } from '../colors'
+import { useColors } from '../options'
+import { useData } from '@/store'
 
 export type IMode = {
   category: string
@@ -19,18 +17,30 @@ export type IMode = {
 Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function Earnings () {
-  const { backgroundColor, borderColor } = useColors()
+  const { backgroundColor, borderColor, options } = useColors('Ganancias')
+  const { influencer } = useData()
   const [mode, setMode] = useState<IMode>({
     category: 'año',
     year: '2024',
-    month: 'enero',
+    month: 'Enero',
     weekOfMonth: '1'
   })
   const [color, setColor] = useState<number>(0)
+  const [data, setData] = useState<{ labels: string[]; data: number[] } | null>(null)
 
-  const options = useOptions()
-  const data = useData(mode, color)
+  useEffect(() => {
+    if (!influencer || !mode) return
 
+    fetch('/api/charts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode, influencerId: influencer.id })
+    })
+      .then(res => res.json())
+      .then(res => setData(res))
+  }, [mode, influencer])
+
+  if (!data) return <div>Loading...</div>
   return (
     <Card>
       <CardHeader className='flex flex-col'>
@@ -39,7 +49,18 @@ export default function Earnings () {
       <CardBody>
         <div className='w-[700px] h-[400px] mx-4'>
           <Bar
-            data={data}
+            data={{
+              labels: data.labels,
+              datasets: [
+                {
+                  label: 'Ganancias',
+                  backgroundColor: backgroundColor[color],
+                  borderColor: borderColor[color],
+                  borderWidth: 2,
+                  data: data.data
+                }
+              ]
+            }}
             options={options as any}
             width={700}
             height={400}
@@ -63,11 +84,14 @@ export default function Earnings () {
               />
             )}
           >
-            {['0', '1', '2'].map(item => (
+            {['0', '1', '2']?.map(item => (
               <SelectItem key={item} value={item}>
                 <div
                   className='w-6 h-6 rounded-full border'
-                  style={{ backgroundColor: backgroundColor[Number(item)], borderColor: borderColor[Number(item)] }}
+                  style={{
+                    backgroundColor: backgroundColor[Number(item)],
+                    borderColor: borderColor[Number(item)]
+                  }}
                 />
               </SelectItem>
             ))}

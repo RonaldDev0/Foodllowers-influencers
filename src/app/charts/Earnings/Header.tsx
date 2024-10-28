@@ -17,7 +17,7 @@ type ISelectProps = {
 
 const options = {
   años: Array.from({ length: new Date().getFullYear() - 2024 + 1 }, (_, i) => (2024 + i).toString()),
-  meses: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+  meses: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
   semanas: ['1', '2', '3', '4']
 }
 
@@ -27,7 +27,7 @@ const ModeSelect = ({ items, className, defaultKey, onChangeTarget, setMode }: I
     defaultSelectedKeys={[defaultKey]}
     onChange={({ target: { value } }) => setMode((prev: IMode) => ({ ...prev, [onChangeTarget]: value as string }))}
   >
-    {items.map(item => (
+    {items?.map(item => (
       <SelectItem key={item} value={item}>
         {item}
       </SelectItem>
@@ -45,7 +45,7 @@ export function Header ({ mode, setMode }: IProps) {
           defaultSelectedKeys={['año']}
           onChange={({ target: { value } }) => setMode((prev: IMode) => ({ ...prev, category: value as string }))}
         >
-          {['año', 'mes', 'semana'].map(item => (
+          {['año', 'mes', 'semana']?.map(item => (
             <SelectItem key={item} value={item}>
               {item}
             </SelectItem>
